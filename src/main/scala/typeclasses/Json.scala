@@ -1,5 +1,7 @@
 package typeclasses
 
+import models.Person
+
 /*
   - There are three important components to the type class pattern:
 	  - the type class itself
@@ -22,8 +24,6 @@ trait JsonWriter[A] {
 
 
 // Instances
-final case class Person(name: String, email: String)
-
 object JsonWriterInstances {
   implicit val stringJsonWriter = new JsonWriter[String] {
     def write(value: String): Json =

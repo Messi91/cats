@@ -1,10 +1,10 @@
 package typeclasses
 
+import models.Cat
+
 trait Printable[A] {
   def format(value: A): String
 }
-
-final case class Cat(name: String, age: Int, color: String)
 
 object PrintableInstances {
   implicit val printableString = new Printable[String] {
@@ -43,12 +43,13 @@ object PrintableSyntax {
 }
 
 object PrintableApp extends App {
+
+  val string = "Cazzo likes playing with a ball of string."
+  val integer = 9
+  val cat = Cat(name = "Cazzo", age = 3, color = "blue")
+
   def useSingletonFormatter: Unit = {
     import PrintableInstances._
-
-    val string = "Cazzo likes playing with a ball of string."
-    val integer = 9
-    val cat = Cat(name = "Cazzo", age = 3, color = "blue")
 
     println(Printable.formatt(string))
     println(Printable.formatt(integer))
@@ -57,10 +58,6 @@ object PrintableApp extends App {
 
   def useSingletonPrinter: Unit = {
     import PrintableInstances._
-
-    val string = "Cazzo likes playing with a ball of String."
-    val integer = 9
-    val cat = Cat(name = "Cazzo", age = 3, color = "blue")
 
     Printable.print(string)
     Printable.print(integer)
@@ -71,10 +68,6 @@ object PrintableApp extends App {
     import PrintableInstances._
     import PrintableSyntax._
 
-    val string = "Cazzo likes playing with a ball of string."
-    val integer = 9
-    val cat = Cat(name = "Cazzo", age = 3, color = "blue")
-
     println(string.formatt)
     println(integer.formatt)
     println(cat.formatt)
@@ -83,10 +76,6 @@ object PrintableApp extends App {
   def useExtensionPrinter: Unit = {
     import PrintableInstances._
     import PrintableSyntax._
-
-    val string = "Cazzo likes playing with a ball of String."
-    val integer = 9
-    val cat = Cat(name = "Cazzo", age = 3, color = "blue")
 
     string.print
     integer.print
