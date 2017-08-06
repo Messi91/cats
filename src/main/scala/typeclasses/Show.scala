@@ -3,12 +3,11 @@ package typeclasses
 import cats.Show
 import cats.instances.int._
 import cats.instances.string._
-import ShowInstances._
-import ShowSyntax._
 import models.Cat
 
 object ShowInstances {
   implicit val showCat = Show.show[Cat] { cat =>
+    import cats.syntax.show._
     s"${cat.name.show} is a ${cat.age.show} year-old ${cat.color.show} cat."
   }
 }
@@ -36,6 +35,8 @@ object ShowApp extends App {
   }
 
   def useSyntax: Unit = {
+    import ShowSyntax._
+
     val showInt = 123.show
     val showString = "abc".show
     val showCat = cat.show(ShowInstances.showCat)
