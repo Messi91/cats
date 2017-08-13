@@ -33,23 +33,31 @@ object SuperAdderInstances {
   }
 }
 
+object SuperAdderSyntax {
+  implicit class SuperAdderOps[A: Monoid](items: List[A]) {
+    def add: A = SuperAdder.add(items)
+  }
+}
+
 object SuperAdderApp extends App {
+  import SuperAdderInstances._
+  import SuperAdderSyntax._
+
   def addListOfNumbers: Unit = {
     val numbers = List(1, 2, 3, 4, 5)
-    val result = SuperAdder.add(numbers)
+    val result = numbers.add
     println("addListOfNumbers = " + result)
   }
 
   def addListOfOptions: Unit = {
     val options = List(1.some, 2.some, 3.some, 4.some, none)
-    val result = SuperAdder.add(options)
+    val result = options.add
     println("addListOfOptions = " + result)
   }
 
   def addListOfOrders: Unit = {
-    import SuperAdderInstances._
-    val options = List(Order(1, 2), Order(3, 4), Order(5, 6))
-    val result = SuperAdder.add(options)
+    val orders = List(Order(1, 2), Order(3, 4), Order(5, 6))
+    val result = orders.add
     println("addListOfOrders = " + result)
   }
 
