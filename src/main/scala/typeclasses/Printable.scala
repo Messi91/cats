@@ -1,9 +1,16 @@
 package typeclasses
 
-import models.Cat
+import models.{Box, Cat}
 
 trait Printable[A] {
   def format(value: A): String
+
+  def contramap[B](func: B => A): Printable[B] = {
+    val self = this
+    new Printable[B] {
+      override def format(value: B) = self.format(func(value))
+    }
+  }
 }
 
 object PrintableInstances {
@@ -18,6 +25,10 @@ object PrintableInstances {
   implicit val printableCat = new Printable[Cat] {
     override def format(cat: Cat) = s"${cat.name} is a ${cat.age} year-old ${cat.color} cat."
   }
+
+  implicit def printableBox[A](implicit printable: Printable[A]): Printable[Box[A]] = {
+    printable.contramap[Box[A]](_.value)
+  }
 }
 
 object Printable {
@@ -27,6 +38,10 @@ object Printable {
 
   def print[A](value: A)(implicit formatter: Printable[A]): Unit = {
     println(formatter.format(value))
+  }
+
+  def contramap[A, B](func: (B => A))(implicit formatter: Printable[A]): Printable[B] = {
+    formatter.contramap(func)
   }
 }
 
@@ -47,6 +62,7 @@ object PrintableApp extends App {
   val string = "Cazzo likes playing with a ball of string."
   val integer = 9
   val cat = Cat(name = "Cazzo", age = 3, color = "blue")
+  val double = 3.14
 
   def useSingletonFormatter: Unit = {
     import PrintableInstances._
@@ -82,6 +98,29 @@ object PrintableApp extends App {
     cat.print
   }
 
+  def useContramap: Unit = {
+    import PrintableInstances._
+
+    val double2string = Printable.contramap((x: Double) => x.toString)
+    val double2integer = Printable.contramap((x: Double) => x.toInt)
+
+    println(double2string.format(double))
+    println(double2integer.format(double))
+  }
+
+  def useBox: Unit = {
+    import PrintableInstances._
+    import PrintableSyntax._
+
+    val stringBox = Box(string)
+    val integerBox = Box(integer)
+    val catBox = Box(cat)
+
+    stringBox.print
+    integerBox.print
+    catBox.print
+  }
+
   useSingletonFormatter
   println
   useSingletonPrinter
@@ -89,4 +128,8 @@ object PrintableApp extends App {
   useExtensionFormatter
   println
   useExtensionPrinter
+  println
+  useContramap
+  println
+  useBox
 }
