@@ -11,10 +11,10 @@ final case class Leaf[A](value: A) extends Tree[A]
 
 object TreeInstances {
   implicit val treeFunctor = new Functor[Tree] {
-    override def map[A, B](fa: Tree[A])(f: (A) => B): Tree[B] =
-      fa match {
-        case Branch(left, right) => Branch(map(left)(f), map(right)(f))
-        case Leaf(value) => Leaf(f(value))
+    override def map[A, B](tree: Tree[A])(fn: (A) => B): Tree[B] =
+      tree match {
+        case Branch(left, right) => Branch(map(left)(fn), map(right)(fn))
+        case Leaf(value) => Leaf(fn(value))
       }
   }
 }

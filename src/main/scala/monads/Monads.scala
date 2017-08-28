@@ -86,10 +86,6 @@ object MonadApp extends App {
     import cats.syntax.flatMap._
     import cats.syntax.functor._
 
-    val stringId = "Dave": Id[String]
-    val intId = 123: Id[Int]
-    val listId = List(1, 2, 3): Id[List[Int]]
-
     val a = Monad[Id].pure(3)
     val b = Monad[Id].flatMap(a)(_ + 1)
     val c = for {
