@@ -1,4 +1,4 @@
-package monoids
+package monoids_and_semigroups
 
 import cats.Monoid
 import cats.instances.int._
